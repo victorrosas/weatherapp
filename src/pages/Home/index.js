@@ -2,11 +2,13 @@ import React from 'react';
 import { SafeAreaView, Text, StyleSheet } from 'react-native';
 
 import Menu from '../../components/Menu';
+import Header from '../../components/Header';
 
 export default function Home() {
     return (
         <SafeAreaView style={styles.container}>
             <Menu />
+            <Header />
         </SafeAreaView>
     );
 };
