@@ -11,7 +11,7 @@ export default function Header() {
             colors={['#1ed6ff', '#97c1ff']}
         >
             <Text style={styles.date}>11/03/2021</Text>
-            <Text style={styles.city}>11/03/2021</Text>
+            <Text style={styles.city}>Rio Branco</Text>
             <Ionicons 
                 name="cloud"
                 color="#FFF"
