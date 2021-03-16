@@ -8,15 +8,15 @@ export default function Forecast({ data }) {
     let icon = condition(data.condition);
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.date}>{data.date}</Text>
-            <Ionicons name={icon.name} color={icon.color} size={25} />
+            <View style={styles.container}>
+                <Text style={styles.date}>{data.date}</Text>
+                <Ionicons name={icon.name} color={icon.color} size={25} />
 
-            <View style={styles.temp}>
-                <Text>{data.min}°</Text>
-                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{data.max}°</Text>
+                <View style={styles.temp}>
+                    <Text>{data.min}°</Text>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{data.max}°</Text>
+                </View>
             </View>
-        </View>
     );
 };
 
@@ -37,5 +37,5 @@ const styles = StyleSheet.create({
     },
     temp: {
         alignItems: 'center'
-    }
+    },
 });

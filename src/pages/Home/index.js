@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, Text, StyleSheet, FlatList } from 'react-native';
+import { SafeAreaView, Text, StyleSheet, FlatList, View } from 'react-native';
 import * as Location from 'expo-location';
 
 import Menu from '../../components/Menu';
@@ -9,93 +9,10 @@ import Forecast from '../../components/Forecast';
 
 import api, { key } from '../../services/api';
 
-const mylist = [
-    {
-      "date": "11/03",
-      "weekday": "Qui",
-      "max": 27,
-      "min": 17,
-      "description": "Tempestades",
-      "condition": "storm"
-    },
-    {
-      "date": "12/03",
-      "weekday": "Sex",
-      "max": 27,
-      "min": 17,
-      "description": "Tempestades isoladas",
-      "condition": "storm"
-    },
-    {
-      "date": "13/03",
-      "weekday": "Sáb",
-      "max": 26,
-      "min": 18,
-      "description": "Tempestades",
-      "condition": "storm"
-    },
-    {
-      "date": "14/03",
-      "weekday": "Dom",
-      "max": 27,
-      "min": 18,
-      "description": "Tempestades",
-      "condition": "storm"
-    },
-    {
-      "date": "15/03",
-      "weekday": "Seg",
-      "max": 26,
-      "min": 18,
-      "description": "Tempestades",
-      "condition": "storm"
-    },
-    {
-      "date": "16/03",
-      "weekday": "Ter",
-      "max": 27,
-      "min": 18,
-      "description": "Tempestades",
-      "condition": "storm"
-    },
-    {
-      "date": "17/03",
-      "weekday": "Qua",
-      "max": 27,
-      "min": 18,
-      "description": "Tempestades",
-      "condition": "storm"
-    },
-    {
-      "date": "18/03",
-      "weekday": "Qui",
-      "max": 26,
-      "min": 19,
-      "description": "Tempestades",
-      "condition": "storm"
-    },
-    {
-      "date": "19/03",
-      "weekday": "Sex",
-      "max": 24,
-      "min": 19,
-      "description": "Tempestades isoladas",
-      "condition": "storm"
-    },
-    {
-      "date": "20/03",
-      "weekday": "Sáb",
-      "max": 25,
-      "min": 17,
-      "description": "Tempestades",
-      "condition": "storm"
-    }
-  ];
-
 export default function Home() {
   const [errorMsg, setErrorMsg] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [wether, setWether] = useState([]);
+  const [weather, setWeather] = useState([]);
   const [icon, setIcon] = useState({ name: 'cloud', color: '#FFF'});
   const [background, setBackground] = useState(['#1ed6ff', '#97c1ff']);
 
@@ -115,7 +32,7 @@ export default function Home() {
 
       const response = await api.get(`/weather?key=${key}&lat=${location.coords.latitude}&lon=${location.coords.longitude}`);
 
-      setWether(response.data);
+      setWeather(response.data);
 
       if(response.data.results.currently === 'noite') {
         setBackground(['#0c3741', '#0f2f61'])
@@ -135,22 +52,31 @@ export default function Home() {
 
       setLoading(false);
 
-
     })();
 
   }, []);
 
+  if(loading) {
+    return(
+      <View style={styles.container}>
+        <Text style={{ fontSize:17, fontStyle: 'italic'}}>Carregando dados...</Text>
+      </View>
+    );
+  }
+
     return (
         <SafeAreaView style={styles.container}>
             <Menu />
-            <Header />
-            <Conditions />
+
+            <Header background={background} weather={weather} icon={icon} />
+
+            <Conditions weather={weather} />
 
             <FlatList 
                 horizontal={true}
                 contentContainerStyle={{ paddingBottom: '5%'}}
                 style={styles.list}
-                data={mylist}
+                data={weather.results.forecast}
                 keyExtractor={ item => item.date}
                 renderItem={ ({ item }) => <Forecast data={item} /> }
             />
@@ -164,7 +90,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#e8f0ff',
-        paddingTop: '5%'
+        paddingTop: '5%',
+        marginTop: 15
     },
     list: {
         marginTop: 10,
